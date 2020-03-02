@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="spacing_1x">4dp</dimen>
+    <dimen name="spacing_2x">8dp</dimen>
+    <dimen name="spacing_3x">16dp</dimen>
+    <dimen name="spacing_4x">24dp</dimen>
+    <dimen name="spacing_5x">32dp</dimen>
+    <dimen name="spacing_6x">40dp</dimen>
+    <dimen name="spacing_7x">48dp</dimen>
+
+    <dimen name="progress_bar_size">40dp</dimen>
+    <dimen name="result_text_size">22sp</dimen>
+    <dimen name="convert_button_text_size">20dp</dimen>
+    <dimen name="view_width">400dp</dimen>
+    <dimen name="rates_text_view">26sp</dimen>
+    <dimen name="code_currency_text_size">26sp</dimen>
+</resources>
