@@ -3,20 +3,21 @@ package practice.conversionapp.ui.converter
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import kotlinx.android.synthetic.main.item_rates.view.*
 import practice.conversionapp.R
 import practice.conversionapp.data.model.CurrencyResponse
-import javax.inject.Inject
 
-class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>() {
+class RatesAdapter : RecyclerView.Adapter<RatesAdapter.RatesViewHolder>() {
 
     private var rates = listOf<CurrencyResponse>()
 
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): RatesViewHolder {
-        return RatesViewHolder(LayoutInflater.from(parent.context).inflate(R.layout.item_rates, parent, false))
+        return RatesViewHolder(LayoutInflater.from(parent.context)
+                .inflate(R.layout.item_rates, parent, false))
     }
 
     override fun getItemCount(): Int = rates.size
@@ -28,10 +29,12 @@ class RatesAdapter @Inject constructor() : RecyclerView.Adapter<RatesAdapter.Rat
             currencyCodeTextView.text = rate.currencyCode
             currencyBuyingTextView.text = rate.buyingRate.toString()
             currencySellingTextView.text = rate.sellingRate.toString()
+            if (position % 2 == 0) itemContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimaryDark))
+            else itemContainer.setBackgroundColor(ContextCompat.getColor(context, R.color.colorPrimary))
         }
     }
 
-    fun setData(newRates: List<CurrencyResponse>){
+    fun setData(newRates: List<CurrencyResponse>) {
         val diffResult: DiffUtil.DiffResult = DiffUtil.calculateDiff(RateItemDiffCallback(rates, newRates))
         rates = newRates
         diffResult.dispatchUpdatesTo(this)

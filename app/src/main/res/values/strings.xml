@@ -2,7 +2,7 @@
     <string name="app_name">ConversionApp</string>
     <string name="enter_amount">Enter Amount</string>
     <string name="convert_button">convert</string>
-    <string name="rates">Rates</string>
+    <string name="switch_button">switch button</string>
 
     <string-array name="currencies">
         <item>AUD</item>

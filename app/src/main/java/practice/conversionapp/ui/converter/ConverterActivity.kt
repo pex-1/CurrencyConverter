@@ -2,35 +2,27 @@ package practice.conversionapp.ui.converter
 
 import android.content.Context
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.view.inputmethod.InputMethodManager
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import dagger.android.support.DaggerAppCompatActivity
 import kotlinx.android.synthetic.main.activity_currency.*
+import org.koin.android.ext.android.inject
 import practice.conversionapp.Constants
 import practice.conversionapp.R
 import practice.conversionapp.data.model.CurrencyResponse
-import practice.conversionapp.data.model.NetworkResponse
-import practice.conversionapp.ui.viewmodels.ViewModelProviderFactory
 import practice.conversionapp.util.*
-import javax.inject.Inject
 
 
-class ConverterActivity : DaggerAppCompatActivity(), AdapterView.OnItemSelectedListener {
+class ConverterActivity : AppCompatActivity(), AdapterView.OnItemSelectedListener {
 
-    @Inject
-    lateinit var providerFactory: ViewModelProviderFactory
 
-    private lateinit var viewModel: ConverterViewModel
+    private val viewModel: ConverterViewModel by inject()
 
-    @Inject
-    lateinit var ratesAdapter: RatesAdapter
+    private val ratesAdapter: RatesAdapter by inject()
 
     var rates : List<CurrencyResponse>? = null
 
@@ -41,7 +33,7 @@ class ConverterActivity : DaggerAppCompatActivity(), AdapterView.OnItemSelectedL
 
         initSpinners()
 
-        viewModel = ViewModelProvider(this, providerFactory).get(ConverterViewModel::class.java)
+        //viewModel = ViewModelProvider(this).get(ConverterViewModel::class.java)
 
         if(viewModel.conversion.result != 0f){
             medianTextView.text = viewModel.conversion.result.toString()
@@ -54,15 +46,18 @@ class ConverterActivity : DaggerAppCompatActivity(), AdapterView.OnItemSelectedL
 
     private fun manageButtonClicks() {
         convertButton.setOnClickListener {
-            if(rates != null){
-                hideKeyboard()
-                calculateResult()
-            }else if(applicationContext.isConnectedToNetwork()){
-                viewModel.getRates()
-            }
-            else{
-                hideKeyboard()
-                window.decorView.rootView.snackbar(Constants.NO_NETWORK_CONNECTION)
+            when {
+                rates != null -> {
+                    hideKeyboard()
+                    calculateResult()
+                }
+                applicationContext.isConnectedToNetwork() -> {
+                    viewModel.getRates()
+                }
+                else -> {
+                    hideKeyboard()
+                    window.decorView.rootView.snackbar(Constants.NO_NETWORK_CONNECTION)
+                }
             }
         }
 
@@ -111,14 +106,20 @@ class ConverterActivity : DaggerAppCompatActivity(), AdapterView.OnItemSelectedL
             }
         })
 
-        viewModel.errorHandling.observe(this, Observer {
-            if(it.status == NetworkResponse.NetworkStatus.SUCCESS){
-                ratesProgressBar.hide()
+        viewModel.spinner.observe(this, Observer {
+            if (it){
+                ratesProgressBar.show()
             }else{
                 ratesProgressBar.hide()
-                window.decorView.rootView.snackbar("Error: ${it.message}")
             }
         })
+
+        viewModel.snackbar.observe(this, Observer {
+            if(!it.isNullOrBlank()){
+                window.decorView.rootView.snackbar("$it")
+            }
+        })
+
     }
 
     private fun initSpinners() {

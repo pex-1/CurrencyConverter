@@ -1,11 +1,19 @@
 package practice.conversionapp
 
-import dagger.android.AndroidInjector
-import dagger.android.support.DaggerApplication
-import practice.conversionapp.di.DaggerAppComponent
+import android.app.Application
+import org.koin.android.ext.koin.androidContext
+import org.koin.android.ext.koin.androidLogger
+import org.koin.core.context.startKoin
+import practice.conversionapp.di.*
 
-class BaseApplication : DaggerApplication() {
-    override fun applicationInjector(): AndroidInjector<out DaggerApplication> {
-        return DaggerAppComponent.builder().application(this).build()
+class BaseApplication : Application() {
+
+    override fun onCreate() {
+        super.onCreate()
+        startKoin {
+            androidLogger()
+            androidContext(this@BaseApplication)
+            modules(listOf(appModule, networkModule, viewModelsModule, converterModule, databaseModule))
+        }
     }
 }

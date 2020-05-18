@@ -1,6 +1,5 @@
 package practice.conversionapp.util
 
-import android.util.Log
 import practice.conversionapp.data.model.Conversion
 
 object ConversionUtils {

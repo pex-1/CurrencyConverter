@@ -1,12 +1,16 @@
 package practice.conversionapp.data.model
 
 
+import androidx.room.Entity
+import androidx.room.PrimaryKey
 import com.google.gson.annotations.SerializedName
 
+@Entity(tableName = "rates_table")
 data class CurrencyResponse(
     @SerializedName("buying_rate")
     val buyingRate: Float,
     @SerializedName("currency_code")
+    @PrimaryKey
     val currencyCode: String,
     @SerializedName("median_rate")
     val medianRate: Float,
